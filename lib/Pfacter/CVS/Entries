@@ -1,0 +1,27 @@
+/fqdn.pm/1.1/Tue Oct 24 16:39:41 2006//
+/uniqueid.pm/1.1/Tue Oct 24 16:39:41 2006//
+/wwn.pm/1.1/Tue Oct 24 16:39:41 2006//
+/operatingsystem.pm/1.2/Fri Oct 27 19:40:17 2006//
+/domain.pm/1.2/Thu Jan 11 19:34:02 2007//
+/hardwaremodel.pm/1.3/Thu Jan 11 19:39:11 2007//
+/hardwareplatform.pm/1.2/Thu Jan 11 19:47:13 2007//
+/hostname.pm/1.2/Thu Jan 11 19:49:08 2007//
+/kernel.pm/1.2/Thu Jan 11 19:52:48 2007//
+/architecture.pm/1.3/Thu Jan 11 22:10:40 2007//
+/kernelrelease.pm/1.3/Thu Jan 11 22:11:35 2007//
+/kernelversion.pm/1.3/Thu Jan 11 22:12:15 2007//
+/lsbdescription.pm/1.2/Thu Jan 11 22:13:11 2007//
+/lsbid.pm/1.2/Thu Jan 11 22:13:43 2007//
+/lsbrelease.pm/1.2/Thu Jan 11 22:14:56 2007//
+/memorytotal.pm/1.2/Thu Jan 11 22:21:10 2007//
+/processorcount.pm/1.2/Thu Jan 11 22:23:02 2007//
+/localtime.pm/1.1/Wed Feb 28 22:28:00 2007//
+/disk.pm/1.1/Thu Apr 26 18:42:39 2007//
+/ipaddress.pm/1.4/Thu Apr 26 19:05:21 2007//
+/cfversion.pm/1.1/Mon Apr 30 14:56:02 2007//
+/serialnumber.pm/1.4/Tue May  1 16:23:09 2007//
+/processor.pm/1.2/Tue May  1 16:30:32 2007//
+/macaddress.pm/1.6/Tue May  1 20:08:27 2007//
+/cfclasses.pm/1.3/Tue May  1 20:43:52 2007//
+/memory.pm/1.7/Tue May 29 18:03:19 2007//
+D

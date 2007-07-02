@@ -1,0 +1,8 @@
+name:         Pfacter
+version:      1.7
+version_from: pfacter
+installdirs:  site
+requires:
+    Getopt::Long:                   0
+
+distribution_type: module

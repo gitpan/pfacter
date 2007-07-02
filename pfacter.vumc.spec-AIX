@@ -1,0 +1,121 @@
+Summary: Collect and display facts about the system.
+Name: pfacter.vumc
+Version: 1.7
+Release: 1
+License: GPL
+Group: System Environment/Base
+
+Packager: Scott Schneider <scott.schneider@vanderbilt.edu>
+Vendor: Vanderbilt University Medical Center
+
+Source: http://adm01lp-vm.mc.vanderbilt.edu/src/pfacter.vumc-1.7.tar.gz
+BuildRoot: /opt/freeware/src/packages/BUILD/%{name}-buildroot
+
+Requires: perl
+
+%description
+Collect and display facts about the current system.
+
+%define _unpackaged_files_terminate_build 0
+%define _missing_doc_files_terminate_build 0
+
+%prep
+%setup
+
+%build
+
+%install
+rm -rf $RPM_BUILD_ROOT
+mkdir -p $RPM_BUILD_ROOT
+mkdir -p $RPM_BUILD_ROOT/usr/bin
+mkdir -p $RPM_BUILD_ROOT/usr/opt/perl5/lib/site_perl/Pfacter
+export PLIB=`perl -e 'print @INC[0]'`
+installbsd -c pfacter $RPM_BUILD_ROOT/usr/bin/pfacter
+installbsd -c -m 755 lib/Pfacter.pm $RPM_BUILD_ROOT/usr/opt/perl5/lib/site_perl/Pfacter.pm
+installbsd -c -m 755 lib/Pfacter/architecture.pm $RPM_BUILD_ROOT/usr/opt/perl5/lib/site_perl/Pfacter/architecture.pm
+installbsd -c -m 755 lib/Pfacter/cfclasses.pm $RPM_BUILD_ROOT/usr/opt/perl5/lib/site_perl/Pfacter/cfclasses.pm
+installbsd -c -m 755 lib/Pfacter/cfversion.pm $RPM_BUILD_ROOT/usr/opt/perl5/lib/site_perl/Pfacter/cfversion.pm
+installbsd -c -m 755 lib/Pfacter/disk.pm $RPM_BUILD_ROOT/usr/opt/perl5/lib/site_perl/Pfacter/disk.pm
+installbsd -c -m 755 lib/Pfacter/domain.pm $RPM_BUILD_ROOT/usr/opt/perl5/lib/site_perl/Pfacter/domain.pm
+installbsd -c -m 755 lib/Pfacter/fqdn.pm $RPM_BUILD_ROOT/usr/opt/perl5/lib/site_perl/Pfacter/fqdn.pm
+installbsd -c -m 755 lib/Pfacter/hardwaremodel.pm $RPM_BUILD_ROOT/usr/opt/perl5/lib/site_perl/Pfacter/hardwaremodel.pm
+installbsd -c -m 755 lib/Pfacter/hardwareplatform.pm $RPM_BUILD_ROOT/usr/opt/perl5/lib/site_perl/Pfacter/hardwareplatform.pm
+installbsd -c -m 755 lib/Pfacter/hostname.pm $RPM_BUILD_ROOT/usr/opt/perl5/lib/site_perl/Pfacter/hostname.pm
+installbsd -c -m 755 lib/Pfacter/ipaddress.pm $RPM_BUILD_ROOT/usr/opt/perl5/lib/site_perl/Pfacter/ipaddress.pm
+installbsd -c -m 755 lib/Pfacter/kernel.pm $RPM_BUILD_ROOT/usr/opt/perl5/lib/site_perl/Pfacter/kernel.pm
+installbsd -c -m 755 lib/Pfacter/kernelrelease.pm $RPM_BUILD_ROOT/usr/opt/perl5/lib/site_perl/Pfacter/kernelrelease.pm
+installbsd -c -m 755 lib/Pfacter/kernelversion.pm $RPM_BUILD_ROOT/usr/opt/perl5/lib/site_perl/Pfacter/kernelversion.pm
+installbsd -c -m 755 lib/Pfacter/localtime.pm $RPM_BUILD_ROOT/usr/opt/perl5/lib/site_perl/Pfacter/localtime.pm
+installbsd -c -m 755 lib/Pfacter/lsbdescription.pm $RPM_BUILD_ROOT/usr/opt/perl5/lib/site_perl/Pfacter/lsbdescription.pm
+installbsd -c -m 755 lib/Pfacter/lsbid.pm $RPM_BUILD_ROOT/usr/opt/perl5/lib/site_perl/Pfacter/lsbid.pm
+installbsd -c -m 755 lib/Pfacter/lsbrelease.pm $RPM_BUILD_ROOT/usr/opt/perl5/lib/site_perl/Pfacter/lsbrelease.pm
+installbsd -c -m 755 lib/Pfacter/macaddress.pm $RPM_BUILD_ROOT/usr/opt/perl5/lib/site_perl/Pfacter/macaddress.pm
+installbsd -c -m 755 lib/Pfacter/memory.pm $RPM_BUILD_ROOT/usr/opt/perl5/lib/site_perl/Pfacter/memory.pm
+installbsd -c -m 755 lib/Pfacter/memorytotal.pm $RPM_BUILD_ROOT/usr/opt/perl5/lib/site_perl/Pfacter/memorytotal.pm
+installbsd -c -m 755 lib/Pfacter/operatingsystem.pm $RPM_BUILD_ROOT/usr/opt/perl5/lib/site_perl/Pfacter/operatingsystem.pm
+installbsd -c -m 755 lib/Pfacter/processor.pm $RPM_BUILD_ROOT/usr/opt/perl5/lib/site_perl/Pfacter/processor.pm
+installbsd -c -m 755 lib/Pfacter/processorcount.pm $RPM_BUILD_ROOT/usr/opt/perl5/lib/site_perl/Pfacter/processorcount.pm
+installbsd -c -m 755 lib/Pfacter/serialnumber.pm $RPM_BUILD_ROOT/usr/opt/perl5/lib/site_perl/Pfacter/serialnumber.pm
+installbsd -c -m 755 lib/Pfacter/uniqueid.pm $RPM_BUILD_ROOT/usr/opt/perl5/lib/site_perl/Pfacter/uniqueid.pm
+
+%post
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+/usr/bin/pfacter
+/usr/opt/perl5/lib/site_perl/Pfacter.pm
+/usr/opt/perl5/lib/site_perl/Pfacter/architecture.pm
+/usr/opt/perl5/lib/site_perl/Pfacter/cfclasses.pm
+/usr/opt/perl5/lib/site_perl/Pfacter/cfversion.pm
+/usr/opt/perl5/lib/site_perl/Pfacter/disk.pm
+/usr/opt/perl5/lib/site_perl/Pfacter/domain.pm
+/usr/opt/perl5/lib/site_perl/Pfacter/fqdn.pm
+/usr/opt/perl5/lib/site_perl/Pfacter/hardwaremodel.pm
+/usr/opt/perl5/lib/site_perl/Pfacter/hardwareplatform.pm
+/usr/opt/perl5/lib/site_perl/Pfacter/hostname.pm
+/usr/opt/perl5/lib/site_perl/Pfacter/ipaddress.pm
+/usr/opt/perl5/lib/site_perl/Pfacter/kernel.pm
+/usr/opt/perl5/lib/site_perl/Pfacter/kernelrelease.pm
+/usr/opt/perl5/lib/site_perl/Pfacter/kernelversion.pm
+/usr/opt/perl5/lib/site_perl/Pfacter/localtime.pm
+/usr/opt/perl5/lib/site_perl/Pfacter/lsbdescription.pm
+/usr/opt/perl5/lib/site_perl/Pfacter/lsbid.pm
+/usr/opt/perl5/lib/site_perl/Pfacter/lsbrelease.pm
+/usr/opt/perl5/lib/site_perl/Pfacter/macaddress.pm
+/usr/opt/perl5/lib/site_perl/Pfacter/memory.pm
+/usr/opt/perl5/lib/site_perl/Pfacter/memorytotal.pm
+/usr/opt/perl5/lib/site_perl/Pfacter/operatingsystem.pm
+/usr/opt/perl5/lib/site_perl/Pfacter/processor.pm 
+/usr/opt/perl5/lib/site_perl/Pfacter/processorcount.pm 
+/usr/opt/perl5/lib/site_perl/Pfacter/serialnumber.pm 
+/usr/opt/perl5/lib/site_perl/Pfacter/uniqueid.pm
+
+%changelog
+* Mon Jun 25 2007 Scott Schneider <scott.schneider@vanderbilt.edu>
+- Added memory fact
+- Updated AIX processing of processor and serialnumber facts
+- Virtual address (e.g. eth0:1) within macaddress
+- Parsing uber-dynamic (time/day/month-stamped) and seemingly
+  worthless (entropy_*) data from cfclasses fact
+- Debugging routine tweaked; additional relayed debugging information
+- Multiple server values supported (with timeout)
+- Various speed/redundancy code patches
+* Tue May 01 2007 Scott Schneider <scott.schneider@vanderbilt.edu>
+- Added cfversion and disk facts
+- Kernel and application-specific module support
+- Virtual address (e.g. eth0:1) within ipaddress
+- Net::LDAP no longer required unless writing
+* Wed Apr 18 2007 Scott Schneider <scott.schneider@vanderbilt.edu>
+- Added cfclasses, localtime and serialnumber facts
+* Thu Dec 21 2006 Scott Schneider <scott.schneider@vanderbilt.edu>
+- Added lsbdescription, lsbid, lsbrelease, and processor facts
+* Mon Nov 06 2006 Scott Schneider <scott.schneider@vanderbilt.edu>
+- Added LDAP write support
+* Wed Oct 11 2006 Scott Schneider <scott.schneider@vanderbilt.edu>
+- Added domain, fqdn, ipaddress, and macaddress fact modules
+- Added XML and YAML output support
+- Most of the fact modules work under AIX now
+* Tue Oct 10 2006 Scott Schneider <scott.schneider@vanderbilt.edu>
+- initial spec file created
