@@ -16,7 +16,7 @@ BEGIN { unshift @INC, './lib'; }
 # FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
 # details.
 
-our $VERSION = '$Id: pfacter,v 1.7 2007/05/30 22:07:41 schneis Exp $';
+our $VERSION = '$Id: pfacter,v 1.8 2007/08/21 15:51:23 schneis Exp $';
 
 
 
@@ -243,7 +243,7 @@ the specified connection and authentication information.  Use SSL.
 
 =head1 AUTHOR
 
-Scott Schneider <scott.schneider@vanderbilt.edu>
+Scott Schneider <scott@loserfish.org>
 
 =cut
 

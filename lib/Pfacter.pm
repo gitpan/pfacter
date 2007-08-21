@@ -35,6 +35,8 @@ sub modulelist {
         /Linux/ && do {
             push @modules, qw(
 
+                hardwaremanufacturer
+                hardwareproduct
                 lsbdescription
                 lsbid
                 lsbrelease

@@ -1,14 +1,14 @@
 Summary: Collect and display facts about the system.
 Name: pfacter.vumc
-Version: 1.7
+Version: 1.8
 Release: 1
 License: GPL
 Group: System Environment/Base
 
-Packager: Scott Schneider <scott.schneider@vanderbilt.edu>
-Vendor: Vanderbilt University Medical Center
+Packager: Scott Schneider <scott@loserfish.org>
+Vendor: loserfish
 
-Source: http://adm01lp-vm.mc.vanderbilt.edu/src/pfacter.vumc-1.6.tar.gz
+Source: http://yum.mc.vanderbilt.edu/src/pfacter.vumc-1.8.tar.gz
 BuildRoot: /home/schneis/rpm/tmp/%{name}-buildroot
 
 Requires: perl
@@ -38,8 +38,10 @@ install -c -m 755 lib/Pfacter/cfversion.pm $RPM_BUILD_ROOT/usr/lib/perl5/site_pe
 install -c -m 755 lib/Pfacter/disk.pm $RPM_BUILD_ROOT/usr/lib/perl5/site_perl/Pfacter/disk.pm
 install -c -m 755 lib/Pfacter/domain.pm $RPM_BUILD_ROOT/usr/lib/perl5/site_perl/Pfacter/domain.pm
 install -c -m 755 lib/Pfacter/fqdn.pm $RPM_BUILD_ROOT/usr/lib/perl5/site_perl/Pfacter/fqdn.pm
+install -c -m 755 lib/Pfacter/hardwaremanufacturer.pm $RPM_BUILD_ROOT/usr/lib/perl5/site_perl/Pfacter/hardwaremanufacturer.pm
 install -c -m 755 lib/Pfacter/hardwaremodel.pm $RPM_BUILD_ROOT/usr/lib/perl5/site_perl/Pfacter/hardwaremodel.pm
 install -c -m 755 lib/Pfacter/hardwareplatform.pm $RPM_BUILD_ROOT/usr/lib/perl5/site_perl/Pfacter/hardwareplatform.pm
+install -c -m 755 lib/Pfacter/hardwareproduct.pm $RPM_BUILD_ROOT/usr/lib/perl5/site_perl/Pfacter/hardwareproduct.pm
 install -c -m 755 lib/Pfacter/hostname.pm $RPM_BUILD_ROOT/usr/lib/perl5/site_perl/Pfacter/hostname.pm
 install -c -m 755 lib/Pfacter/ipaddress.pm $RPM_BUILD_ROOT/usr/lib/perl5/site_perl/Pfacter/ipaddress.pm
 install -c -m 755 lib/Pfacter/kernel.pm $RPM_BUILD_ROOT/usr/lib/perl5/site_perl/Pfacter/kernel.pm
@@ -72,8 +74,10 @@ rm -rf $RPM_BUILD_ROOT
 /usr/lib/perl5/site_perl/Pfacter/disk.pm
 /usr/lib/perl5/site_perl/Pfacter/domain.pm
 /usr/lib/perl5/site_perl/Pfacter/fqdn.pm
+/usr/lib/perl5/site_perl/Pfacter/hardwaremanufacturer.pm
 /usr/lib/perl5/site_perl/Pfacter/hardwaremodel.pm
 /usr/lib/perl5/site_perl/Pfacter/hardwareplatform.pm
+/usr/lib/perl5/site_perl/Pfacter/hardwareproduct.pm
 /usr/lib/perl5/site_perl/Pfacter/hostname.pm
 /usr/lib/perl5/site_perl/Pfacter/ipaddress.pm
 /usr/lib/perl5/site_perl/Pfacter/kernel.pm
@@ -93,7 +97,9 @@ rm -rf $RPM_BUILD_ROOT
 /usr/lib/perl5/site_perl/Pfacter/uniqueid.pm
 
 %changelog
-* XXX Scott Schneider <scott.schneider@vanderbilt.edu>
+* Tue Aug 21 2007 Scott Schneider <scott.schneider@vanderbilt.edu>
+- Added hardwaremanufacturer and hardwareproduct facts
+* Mon Jun 25 2007 Scott Schneider <scott.schneider@vanderbilt.edu>
 - Added memory fact
 - Updated AIX processing of processor and serialnumber facts
 - Virtual address (e.g. eth0:1) within macaddress

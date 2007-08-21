@@ -5,7 +5,7 @@ sub pfact {
     my ( $p ) = shift->{'pfact'};
 
     for ( $p->{'kernel'} ) {
-        /Linux/ && do {
+        /AIX|Linux/ && do {
             my ( $d, @i );
 
             if ( -e '/var/cfengine/bin/cfagent' ) {

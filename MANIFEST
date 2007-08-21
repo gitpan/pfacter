@@ -8,8 +8,10 @@ lib/Pfacter/cfversion.pm
 lib/Pfacter/disk.pm
 lib/Pfacter/domain.pm
 lib/Pfacter/fqdn.pm
+lib/Pfacter/hardwaremanufacturer.pm
 lib/Pfacter/hardwaremodel.pm
 lib/Pfacter/hardwareplatform.pm
+lib/Pfacter/hardwareproduct.pm
 lib/Pfacter/hostname.pm
 lib/Pfacter/ipaddress.pm
 lib/Pfacter/kernel.pm
@@ -33,6 +35,5 @@ Makefile.PL
 MANIFEST
 MANIFEST.SKIP
 META.yml
-pfacter.vumc.spec-AIX
-pfacter.vumc.spec-LINUX
+pfacter.spec
 README
