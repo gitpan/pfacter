@@ -19,6 +19,27 @@ sub pfact {
             }
         };
 
+        /Darwin/ && do {
+            if ( -e '/usr/bin/hostinfo' ) {
+                open( F, '/usr/bin/hostinfo |' );
+                my ( @F ) = <F>;
+                close( F );
+
+                foreach ( @F ) {
+                    if ( /Primary\smemory\savailable:\s(.*)/ ) {
+                        my $m = $1;
+
+                        $m =~ s/\smegabytes/m/g;
+                        $m =~ s/\sgigabytes/g/g;
+
+                        $m =~ s/\.00//g;
+
+                        return $m;
+                    }
+                }
+            }
+        };
+
         /FreeBSD/ && do {
             if ( -e '/sbin/dmesg' ) {
                 my ( $m ) = 0;

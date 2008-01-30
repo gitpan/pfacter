@@ -1,8 +1,11 @@
-name:         Pfacter
-version:      1.7
-version_from: pfacter
-installdirs:  site
+--- #YAML:1.0
+name:                Pfacter
+version:             1.9
+abstract:            Collect and display facts about the system
+license:             perl
+generated_by:        ExtUtils::MakeMaker version 6.32
+distribution_type:   module
 requires:
     Getopt::Long:                   0
-
-distribution_type: module
+author:
+    - Scott Schneider <sschneid@gmail.com>

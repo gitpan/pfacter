@@ -1,8 +1,7 @@
 package Pfacter;
 
 sub modulelist {
-    my $self = shift;
-
+    my $self   = shift;
     my $kernel = shift;
 
     my @modules = qw(
@@ -11,8 +10,10 @@ sub modulelist {
         disk
         domain
         fqdn
+        hardwaremanufacturer
         hardwaremodel
         hardwareplatform
+        hardwareproduct
         hostname
         ipaddress
         kernel
@@ -35,8 +36,6 @@ sub modulelist {
         /Linux/ && do {
             push @modules, qw(
 
-                hardwaremanufacturer
-                hardwareproduct
                 lsbdescription
                 lsbid
                 lsbrelease

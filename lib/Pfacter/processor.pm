@@ -28,6 +28,18 @@ sub pfact {
             return $n;
         };
 
+        /Darwin/ && do {
+            if ( -e '/usr/bin/hostinfo' ) {
+                open( F, '/usr/bin/hostinfo |' );
+                my ( @F)  = <F>;
+                close( F );
+
+                foreach ( @F ) {
+                    return $1 if /Processor\stype:\s(.*)/;
+                }
+            }
+        };
+
         /Linux/ && do {
             my ( $c ) = 0;
 

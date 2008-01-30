@@ -5,6 +5,20 @@ sub pfact {
     my ( $p ) = shift->{'pfact'};
 
     for ( $p->{'kernel'} ) {
+        /AIX/ && do {
+            if ( -e '/usr/sbin/lsattr' ) {
+                open ( F, '/usr/sbin/lsattr -l sys0 -E -a modelname 2>/dev/null |' );
+                my ( @F ) = <F>;
+                close( F );
+
+                foreach ( @F ) {
+                    if ( /modelname\s.*,(.*)\sMachine/ ) {
+                        return $1;
+                    }
+                }
+            }
+        };
+
         /Linux/ && do {
             if ( -e '/usr/sbin/dmidecode' ) {
                 my ( $f );

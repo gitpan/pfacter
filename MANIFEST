@@ -35,5 +35,5 @@ Makefile.PL
 MANIFEST
 MANIFEST.SKIP
 META.yml
-pfacter.spec
 README
+

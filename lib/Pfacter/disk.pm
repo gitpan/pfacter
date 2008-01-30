@@ -39,6 +39,29 @@ sub pfact {
             return join ' ', sort @i;
         };
 
+        /Darwin/ && do {
+            if ( -e '/usr/sbin/diskutil' ) {
+                open( F, '/usr/sbin/diskutil list 2>/dev/null |' );
+                my ( @F ) = <F>;
+                close( F );
+
+                foreach ( @F ) {
+                    if ( /\s+0:/ ) {
+                        my ( $d, $i );
+                        if ( /(disk\d+)/ ) { $d = "/dev/$1"; }
+                        if ( /\*(.*)B/ )   { $i = $1; }
+
+                        $i =~ s/ M/m/;
+                        $i =~ s/ G/g/;
+
+                        push @i, "$d=$i";
+                    }
+                }
+
+                return join ' ', sort @i;
+            }
+        };
+
         /Linux/ && do {
             my ( @i );
 

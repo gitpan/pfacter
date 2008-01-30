@@ -16,7 +16,7 @@ BEGIN { unshift @INC, './lib'; }
 # FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
 # details.
 
-our $VERSION = '$Id: pfacter,v 1.8 2007/08/21 15:51:23 schneis Exp $';
+our $VERSION = '$Id: pfacter,v 1.9 2008/01/30 19:45:59 schneis Exp $';
 
 
 
@@ -37,15 +37,37 @@ if ( @ARGV == 1 ) {
 else {
     foreach ( @ARGV ) {
         $self->{'pfact'}->{$_} = $self->pfact( $_ ) || next;
+
         if ( $self->{'var'}->{'xml'} ) {
-            print "<fact>\n"
-                . "\t<name>"  . $_                 . "</name>\n"
-                . "\t<value>" . $self->pfact( $_ ) . "</value>\n"
-                . "</fact>\n";
+            print "<fact>\n" . "\t<name>"  . $_ . "</name>\n";
+            if (
+                ( $self->{'var'}->{'multi'} )
+             && ( $self->{'pfact'}->{$_} =~ /.+?\=.+?\s.+?\=.+?/ )
+            ) {
+                my @facts = split/ /, $self->{'pfact'}->{$_};
+                foreach my $fact ( @facts ) {
+                    print "\t<value>" . $fact . "</value>\n";
+                }
+            }
+            else {
+                print "\t<value>" . $self->pfact( $_ ) . "</value>\n";
+            }
+            print "</fact>\n";
         }
         else {
             my $c = $self->{'var'}->{'yaml'} ? ': ' : ' => ';
-            print $_ . $c . $self->{'pfact'}->{$_} . "\n";
+            if (
+                ( $self->{'var'}->{'multi'} )
+             && ( $self->{'pfact'}->{$_} =~ /.+?\=.+?\s.+?\=.+?/ )
+            ) {
+                my @facts = split/ /, $self->{'pfact'}->{$_};
+                foreach my $fact ( @facts ) {
+                    print $_ . $c . $fact . "\n";
+                }
+            }
+            else {
+                print $_ . $c . $self->{'pfact'}->{$_} . "\n";
+            }
         }
     }
 }
@@ -65,11 +87,44 @@ if ( $self->{'var'}->{'write'} ) {
         my ( $change );
 
         foreach my $k ( keys %{$self->{'pfact'}} ) {
-            if ( $self->{'ldata'}->{$k} ne $self->{'pfact'}->{$k} ) {
-                if ( $self->{'ldata'}->{$k} ) {
-                    $change->{'replace'}->{$k} = $self->{'pfact'}->{$k};
-                } else {
-                    $change->{'add'}->{$k} = $self->{'pfact'}->{$k};
+            if ( $self->{'var'}->{'multi'} ) {
+                if (
+                    ( ref $self->{'ldata'}->{$k} )
+                 || ( $self->{'pfact'}->{$k} =~ /.+?\=.+?\s.+?\=.+?/ )
+                ) {
+                    if (
+                        ( ref $self->{'ldata'}->{$k} )
+                     && ( $self->{'pfact'}->{$k} =~ /.+?\=.+?\s.+?\=.+?/ )
+                    ) {
+                        my ( $facts );
+                        foreach ( split/ /, $self->{'pfact'}->{$k} ) {
+                            $facts->{$k}->{$_} = 1;
+                        }
+                        foreach ( @{$self->{'ldata'}->{$k}} ) {
+                            if ( $facts->{$k}->{$_} ) {
+                                delete $facts->{$k}->{$_};
+                            }
+                            else {
+                                $change->{'delete'}->{$k} = $_;
+                            }
+                        }
+                        foreach ( keys %{$facts->{$k}} ) {
+                            $change->{'add'}->{$k} = $_;
+                        }
+                    }
+                    else {
+                        $change->{'replace'}->{$k} =
+                            [ split(/ /, $self->{'pfact'}->{$k}) ];
+                    }
+                }
+            }
+            else {
+                if ( $self->{'ldata'}->{$k} ne $self->{'pfact'}->{$k} ) {
+                    if ( $self->{'ldata'}->{$k} ) {
+                        $change->{'replace'}->{$k} = $self->{'pfact'}->{$k};
+                    } else {
+                        $change->{'add'}->{$k} = $self->{'pfact'}->{$k};
+                    }
                 }
             }
         }
@@ -156,6 +211,22 @@ Display a short usage synopsis.
 
 Display the current version/release of pfacter.
 
+=item --moduledir
+
+Specifies the extensible module location; if no specific facts are
+specified, the entire moduledir directory will be read and acted
+upon.
+
+This (at the most basic level) addes a path to perl's @INC array;
+as an example, if moduledir is specified as "/etc/pfacter/modules" (the
+default), a module named Pfacter::thirdparty would be loaded from a
+module located at /etc/pfacter/modules/Pfacter/thirdparty.pm.
+
+=item --multi
+
+Allows for multi-valued facts (ipAddress, macAddress, memory, etc) to
+be displayed as such (both locally and in LDAP).
+
 =item --write
 
 Write any new or changed host facts to LDAP.  Requires that either a
@@ -168,14 +239,21 @@ The following flags are used in conjunction with the --write option:
 
 =item --configfile <configfile>
 
-The file containing configuration information (username, password, and
-LDAP server address).  Format is:
+The file containing configuration information (username, password, LDAP
+server address, etc).  Format is:
+
+    $option: "value"
+
+Anything specified on the command-line (such as moduledir, LDAP connection
+information, etc) can be specified in this configuration file.
+
+For LDAP authentication, the configfile would contain something like:
 
     $username: "pfacter"
     $password: "pf4ct3r"
     $server:   "ldap.company.com"
 
-If you the configfile option it is also possible to specify multiple
+If you use the configfile option it is also possible to specify multiple
 LDAP servers to attempt binds against.  Simple change the format to:
 
     @server:   "ldap1.company.com ldap2.company.com ldap3.company.com"
@@ -243,7 +321,7 @@ the specified connection and authentication information.  Use SSL.
 
 =head1 AUTHOR
 
-Scott Schneider <scott@loserfish.org>
+Scott Schneider <scott.schneider@vanderbilt.edu>
 
 =cut
 
@@ -258,6 +336,8 @@ sub init {
         'base=s'       => \$self->{'var'}->{'base'},
         'debug'        => \$self->{'var'}->{'debug'},
         'help'         => \$self->{'var'}->{'help'},
+        'moduledir=s'  => \$self->{'var'}->{'moduledir'},
+        'multi'        => \$self->{'var'}->{'multi'},
         'password=s'   => \$self->{'var'}->{'password'},
         'server=s'     => \$self->{'var'}->{'server'},
         'ssl'          => \$self->{'var'}->{'ssl'},
@@ -280,7 +360,7 @@ sub init {
 
         for ( qw( username password server ) ) {
             $self->{'var'}->{$_} ||= $self->{'var'}->{'config'}->{$_}
-                if $self->{'var'}->{'config'}->{$_}
+                if $self->{'var'}->{'config'}->{$_};
         }
     }
 
@@ -317,6 +397,18 @@ sub init {
     # Core modules; used to determine other things within other modules
     foreach ( qw( kernel operatingsystem hostname domain ) ) {
         $self->{'pfact'}->{$_} = $self->pfact( $_ );
+    }
+
+    # 3rd party modules
+    if ( $self->{'var'}->{'moduledir'} ) {
+        $self->debug( "Using moduledir $self->{'var'}->{'moduledir'}" );
+        
+        if ( -d $self->{'var'}->{'moduledir'} ) {
+            unshift @INC, $self->{'var'}->{'moduledir'};
+        }
+        else {
+            $self->debug( "Moduledir $self->{'var'}->{'moduledir'} not found" );
+        }
     }
 
     # Setup a (bound) LDAP object if writing
@@ -364,12 +456,10 @@ sub init {
                 $self->{'var'}->{'server'} = $server;
                 last;
             }
-##
             else {
                 $self->debug( "Unknown connection error" );
                 next;
             }
-##
         }
 
         unless ( $self->{'LDAP'} ) {
@@ -398,11 +488,24 @@ sub init {
     }
 
     # Use all facts in Pfacter's modulelist if none are specified
-    unless (@ARGV) {
+    unless ( @ARGV ) {
         $self->debug( "No modules specified; using defaults" );
 
         use Pfacter;
         @ARGV = Pfacter->modulelist( $self->{'pfact'}->{'kernel'} );
+
+        # Read in all facts in --moduledir if specified
+        if ( $self->{'var'}->{'moduledir'} ) {
+            my $moduledir = $self->{'var'}->{'moduledir'};
+
+            my @files = <$moduledir/*>;
+
+            foreach my $file ( @files ) {
+                if ( -d $file ) { push @files, <$file/*>; }
+
+                push @ARGV, $1 if $file =~ /\/(\w+)\.pm$/;
+            }
+        }
     }
 
     return $self;
@@ -413,7 +516,7 @@ sub debug {
 
     return unless $self->{'var'}->{'debug'};
 
-    print STDERR "dbg> " . shift() . "\n";
+    print STDERR 'dbg> ' . shift() . "\n";
 }
 
 sub fetch {
@@ -436,7 +539,7 @@ sub fetch {
         }
     }
 
-    ($r) = values %{$r};
+    ( $r ) = values %{$r};
 
     return $r;
 }
