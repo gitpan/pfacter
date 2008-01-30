@@ -9,7 +9,7 @@ WriteMakefile(
     PREREQ_PM       => {
         'Getopt::Long' => 0,
     },
-    ABSTRACT        => 'Collect and display facts about the system'
+    ABSTRACT        => 'Collect and display facts about the system',
     AUTHOR          => 'Scott Schneider <sschneid@gmail.com>'
 );
 
