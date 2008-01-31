@@ -15,8 +15,11 @@ BEGIN { unshift @INC, './lib'; }
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 # FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
 # details.
+#
+# $Id$
 
-our $VERSION = '$Id: pfacter,v 1.9 2008/01/30 19:45:59 schneis Exp $';
+
+our $VERSION = '1.9-3';
 
 
 
@@ -31,43 +34,38 @@ my $self = pfacter->init();
 
 $self->debug( "Output module list: [ @ARGV ]" );
 
-if ( @ARGV == 1 ) {
-    print $self->pfact( $ARGV[0] ) . "\n";
-}
-else {
-    foreach ( @ARGV ) {
-        $self->{'pfact'}->{$_} = $self->pfact( $_ ) || next;
+foreach ( @ARGV ) {
+    $self->{'pfact'}->{$_} = $self->pfact( $_ ) || next;
 
-        if ( $self->{'var'}->{'xml'} ) {
-            print "<fact>\n" . "\t<name>"  . $_ . "</name>\n";
-            if (
-                ( $self->{'var'}->{'multi'} )
-             && ( $self->{'pfact'}->{$_} =~ /.+?\=.+?\s.+?\=.+?/ )
-            ) {
-                my @facts = split/ /, $self->{'pfact'}->{$_};
-                foreach my $fact ( @facts ) {
-                    print "\t<value>" . $fact . "</value>\n";
-                }
+    if ( $self->{'var'}->{'xml'} ) {
+        print "<fact>\n" . "\t<name>"  . $_ . "</name>\n";
+        if (
+            ( $self->{'var'}->{'multi'} )
+         && ( $self->{'pfact'}->{$_} =~ /.+?\=.+?\s.+?\=.+?/ )
+        ) {
+            my @facts = split/ /, $self->{'pfact'}->{$_};
+            foreach my $fact ( @facts ) {
+                print "\t<value>" . $fact . "</value>\n";
             }
-            else {
-                print "\t<value>" . $self->pfact( $_ ) . "</value>\n";
-            }
-            print "</fact>\n";
         }
         else {
-            my $c = $self->{'var'}->{'yaml'} ? ': ' : ' => ';
-            if (
-                ( $self->{'var'}->{'multi'} )
-             && ( $self->{'pfact'}->{$_} =~ /.+?\=.+?\s.+?\=.+?/ )
-            ) {
-                my @facts = split/ /, $self->{'pfact'}->{$_};
-                foreach my $fact ( @facts ) {
-                    print $_ . $c . $fact . "\n";
-                }
+            print "\t<value>" . $self->pfact( $_ ) . "</value>\n";
+        }
+        print "</fact>\n";
+    }
+    else {
+        my $c = $self->{'var'}->{'yaml'} ? ': ' : ' => ';
+        if (
+            ( $self->{'var'}->{'multi'} )
+         && ( $self->{'pfact'}->{$_} =~ /.+?\=.+?\s.+?\=.+?/ )
+        ) {
+            my @facts = split/ /, $self->{'pfact'}->{$_};
+            foreach my $fact ( @facts ) {
+                print $_ . $c . $fact . "\n";
             }
-            else {
-                print $_ . $c . $self->{'pfact'}->{$_} . "\n";
-            }
+        }
+        else {
+            print $_ . $c . $self->{'pfact'}->{$_} . "\n";
         }
     }
 }
@@ -390,7 +388,7 @@ sub init {
 
     # Display the (CVS) version
     if ( $self->{'var'}->{'version'} ) {
-        print qq($1\n) if $VERSION =~ /\,v\s+(.+?)\s+/;
+        print qq($VERSION\n);
         exit( 0 );
     }
 
