@@ -15,11 +15,9 @@ BEGIN { unshift @INC, './lib'; }
 # ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
 # FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
 # details.
-#
-# $Id$
 
 
-our $VERSION = '1.9-3';
+our $VERSION = '1.10-1';
 
 
 
@@ -193,6 +191,16 @@ pfacter - Collect and display facts about the system
 
 pfacter [option]... [fact] [fact]...
 
+=head1 DESCRIPTION
+
+pfacter is a cross-platform distribution for retrieving facts about the
+system it is run on.  It works like a rosetta stone, collecting information
+on things like IP and MAC addresses, DIMMs, processors, and other hardware
+information.  pfacter supports writing to an LDAP database, making it an
+ideal tool in the creation of a universal infrastructure host list.
+
+pfacter was inspired by Facter (http://reductivelabs.com/projects/facter/).
+
 =head1 OPTIONS
 
 =over 4
@@ -316,6 +324,37 @@ information stored in /etc/pfacter.conf.
 
 Print IP address and MAC address facts.  Write any changes to LDAP using
 the specified connection and authentication information.  Use SSL.
+
+=head1 SAMPLE OUTPUT
+
+What follows is the output of Pfacter on a relatively standard Linux VM.
+
+    architecture => x86_64
+    disk => /dev/sda=10.7g /dev/sdb=8589m
+    domain => company.com
+    fqdn => rabbit.company.com
+    hardwaremodel => x86_64
+    hardwareplatform => x86_64
+    hardwareproduct => VMware Virtual Platform
+    hostname => rabbit
+    ipaddress => eth0=10.125.11.178 lo=127.0.0.1
+    kernel => Linux
+    kernelrelease => 2.6.18-8.el5
+    kernelversion => #1 SMP Fri Jan 26 14:15:14 EST 2007
+    localtime => Thu Feb 21 14:52:01 2008
+    lsbdescription => Red Hat Enterprise Linux Server release 5 (Tikanga)
+    lsbid => RedHatEnterpriseServer
+    lsbrelease => 5
+    macaddress => eth0=00:50:56:A6:55:D2
+    memory => 0=1024m
+    memorytotal => 1027280
+    operatingsystem => RedHat
+    processor => Dual Core AMD Opteron(tm) Processor 280
+    processorcount => 1
+    serialnumber => VMware-50 26 c5 38 09 2f 52 a3-b0 19 5c c9 f6 51 a8 6f
+    uniqueid => 7d0ab20b
+
+Refer to the formatting options above for alternatives (XML, YAML, etc).
 
 =head1 AUTHOR
 

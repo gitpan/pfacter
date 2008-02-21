@@ -25,6 +25,16 @@ sub pfact {
             }
         };
 
+        /SunOS/ && do {
+            if ( -e '/usr/bin/uname' ) {
+                chomp( my $r = qx( /bin/uname -i ) );
+
+                if ( $r =~ /^(.+?),.*$/ ) {
+                    return $1;
+                }
+            }
+        };
+
         if ( $r ) {
             chomp( $r );
 

@@ -47,6 +47,16 @@ sub pfact {
             }
         };
 
+        /SunOS/ && do {
+            if ( -e '/usr/sbin/psrinfo' ) {
+                open( F, '/usr/sbin/psrinfo |' );
+                my ( @F ) = <F>;
+                close( F );
+
+                return scalar @F;
+            }
+        };
+
         return qq((kernel not supported));
     }
 }

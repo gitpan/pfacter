@@ -5,7 +5,7 @@ sub pfact {
     my ( $p ) = shift->{'pfact'};
 
     for ( $p->{'kernel'} ) {
-        /AIX|Darwin|FreeBSD/ && do {
+        /AIX|Darwin|FreeBSD|SunOS/ && do {
             my ( $d, @i );
 
             if ( -e '/etc/ifconfig' ) {

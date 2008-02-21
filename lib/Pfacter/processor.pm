@@ -31,7 +31,7 @@ sub pfact {
         /Darwin/ && do {
             if ( -e '/usr/bin/hostinfo' ) {
                 open( F, '/usr/bin/hostinfo |' );
-                my ( @F)  = <F>;
+                my ( @F )  = <F>;
                 close( F );
 
                 foreach ( @F ) {
@@ -52,6 +52,18 @@ sub pfact {
             $c =~ s/\s+$//;
 
             return $c;
+        };
+
+        /SunOS/ && do {
+            if ( -e '/usr/sbin/prtdiag' ) {
+                open( F, '/usr/sbin/prtdiag |' );
+                my ( @F ) = <F>;
+                close( F );
+
+                foreach ( @F ) {
+                    return $1 if /SUNW,(.+?)\s+\d+/;
+                }
+            }
         };
 
         return qq((kernel not supported));

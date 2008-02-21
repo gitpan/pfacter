@@ -7,7 +7,7 @@ sub pfact {
     for ( $p->{'kernel'} ) {
         /AIX/ && do {
             if ( -e '/usr/sbin/lsattr' ) {
-                open ( F, '/usr/sbin/lsattr -l sys0 -E -a modelname 2>/dev/null |' );
+                open( F, '/usr/sbin/lsattr -l sys0 -E -a modelname 2>/dev/null |' );
                 my ( @F ) = <F>;
                 close( F );
 
@@ -43,6 +43,20 @@ sub pfact {
 
                             return $m;
                         }
+                    }
+                }
+            }
+        };
+
+        /SunOS/ && do {
+            if ( -e '/usr/bin/showrev' ) {
+                open( F, '/usr/bin/showrev 2>/dev/null |' );
+                my ( @F ) = <F>;
+                close( F );
+
+                foreach ( @F ) {
+                    if ( /Hardware provider:\s+(.*)/ ) {
+                        return $1;
                     }
                 }
             }

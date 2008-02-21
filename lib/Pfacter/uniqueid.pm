@@ -17,7 +17,7 @@ sub pfact {
             return lc( $r );
         };
 
-        /Linux/ && do {
+        /Linux|SunOS/ && do {
             my $r = qx(
 
                 /usr/bin/hostid

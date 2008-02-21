@@ -31,6 +31,7 @@ lib/Pfacter/serialnumber.pm
 lib/Pfacter/uniqueid.pm
 lib/Pfacter/wwn.pm
 
+CHANGELOG
 Makefile.PL
 MANIFEST
 MANIFEST.SKIP

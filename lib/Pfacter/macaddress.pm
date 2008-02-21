@@ -22,7 +22,7 @@ sub pfact {
             }
         };
 
-        /Darwin|FreeBSD|Linux/ && do {
+        /Darwin|FreeBSD|Linux|SunOS/ && do {
             my ( $d, @i );
 
             if ( -e '/sbin/ifconfig' ) {
@@ -36,7 +36,7 @@ sub pfact {
             close( F );
 
             foreach ( @F ) {
-                $p->{'kernel'} =~ /Darwin|FreeBSD/ && do {
+                $p->{'kernel'} =~ /Darwin|FreeBSD|SunOS/ && do {
                     $d = $1 if /^(\w+)\:/;
                     push @i, "$d=$1" if /ether\s+(\w+\:\w+\:\w+\:\w+\:\w+\:\w+)/;
                 };
