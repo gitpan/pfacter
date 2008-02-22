@@ -19,7 +19,7 @@ BEGIN { unshift @INC, './lib'; }
 # $Id: pfacter,v 1.11 2008/02/22 14:45:02 schneis Exp $
 
 
-our $VERSION = '1.11-1';
+our $VERSION = '1.11';
 
 
 
@@ -43,7 +43,7 @@ foreach ( @ARGV ) {
             ( $self->{'var'}->{'multi'} )
          && ( $self->{'pfact'}->{$_} =~ /.+?\=.+?\s.+?\=.+?/ )
         ) {
-            my @facts = split/ /, $self->{'pfact'}->{$_};
+            my @facts = split / /, $self->{'pfact'}->{$_};
             foreach my $fact ( @facts ) {
                 print "\t<value>" . $fact . "</value>\n";
             }
@@ -59,7 +59,7 @@ foreach ( @ARGV ) {
             ( $self->{'var'}->{'multi'} )
          && ( $self->{'pfact'}->{$_} =~ /.+?\=.+?\s.+?\=.+?/ )
         ) {
-            my @facts = split/ /, $self->{'pfact'}->{$_};
+            my @facts = split / /, $self->{'pfact'}->{$_};
             foreach my $fact ( @facts ) {
                 print $_ . $c . $fact . "\n";
             }
@@ -95,7 +95,7 @@ if ( $self->{'var'}->{'write'} ) {
                      && ( $self->{'pfact'}->{$k} =~ /.+?\=.+?\s.+?\=.+?/ )
                     ) {
                         my ( $facts );
-                        foreach ( split/ /, $self->{'pfact'}->{$k} ) {
+                        foreach ( split / /, $self->{'pfact'}->{$k} ) {
                             $facts->{$k}->{$_} = 1;
                         }
                         foreach ( @{$self->{'ldata'}->{$k}} ) {
@@ -112,7 +112,7 @@ if ( $self->{'var'}->{'write'} ) {
                     }
                     else {
                         $change->{'replace'}->{$k} =
-                            [ split(/ /, $self->{'pfact'}->{$k}) ];
+                            [ split / /, $self->{'pfact'}->{$k} ];
                     }
                 }
             }
@@ -187,7 +187,7 @@ if ( $self->{'var'}->{'write'} ) {
 
 =head1 NAME
 
-Pfacter - Collect and display facts about the system
+pfacter - Collect and display facts about the system
 
 =head1 SYNOPSIS
 
