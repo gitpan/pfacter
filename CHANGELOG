@@ -1,3 +1,8 @@
+1.11
+* Fri Feb 22 2008 Scott Schneider <sschneid@gmail.com>
+- POD clean-up
+- Inclusion of pfHost.ldif schema LDIF
+
 1.10
 * Thu Feb 21 2008 Scott Schneider <sschneid@gmail.com>
 - Fixed hardwareproduct module bugs

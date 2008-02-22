@@ -36,5 +36,6 @@ Makefile.PL
 MANIFEST
 MANIFEST.SKIP
 META.yml
+pfHost.ldif
 README
 
