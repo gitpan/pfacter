@@ -1,32 +1,31 @@
 package Pfacter::lsbdescription;
 
+#
+
 sub pfact {
     my $self  = shift;
     my ( $p ) = shift->{'pfact'};
 
+    my ( $r );
+
     for ( $p->{'kernel'} ) {
         /Linux/ && do {
-            my ( $d, @i );
+            my ( $c );
 
-            if ( -e '/bin/lsb_release' ) {
-                open( F, '/bin/lsb_release -d |' );
-            }
-            elsif ( -e '/usr/bin/lsb_release' ) {
-                open( F, '/usr/bin/lsb_release -d |' );
-            }
-            else {
-                return qq((kernel not supported));
-            }
+            $c = '/bin/lsb_release -d |'     if -e '/bin/lsb_release';
+            $c = '/usr/bin/lsb_release -d |' if -e '/usr/bin/lsb_release';
 
-            my ( @F ) = <F>;
-            close( F );
+            if ( $c ) {
+                open( F, $c );
+                my ( @F ) = <F>;
+                close( F );
 
-            foreach ( @F ) {
-                return $1 if /\:\s+(.*)$/
+                foreach ( @F ) { if ( /\:\s+(.*)$/ ) { $r = $1; last; } }
             }
         };
 
-        return qq((kernel not supported));
+        if ( $r ) { return( $r ); }
+        else      { return( 0 ); }
     }
 }
 

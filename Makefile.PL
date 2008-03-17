@@ -3,13 +3,14 @@ use warnings;
 use ExtUtils::MakeMaker;
 
 WriteMakefile(
-    NAME            => 'Pfacter',
-    VERSION_FROM    => 'pfacter',
-    EXE_FILES       => [ 'pfacter' ],
-    PREREQ_PM       => {
+    NAME                => 'Pfacter',
+    ABSTRACT            => 'Collect and display facts about the system',
+    AUTHOR              => 'Scott Schneider <sschneid@gmail.com>',
+    VERSION_FROM        => 'pfacter',
+    PL_FILES            => {},
+    PREREQ_PM => {
         'Getopt::Long' => 0,
     },
-    ABSTRACT        => 'Collect and display facts about the system',
-    AUTHOR          => 'Scott Schneider <sschneid@gmail.com>'
+    dist                => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
 );
 

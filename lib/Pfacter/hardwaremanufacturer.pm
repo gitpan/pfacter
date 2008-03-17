@@ -1,8 +1,12 @@
 package Pfacter::hardwaremanufacturer;
 
+#
+
 sub pfact {
     my $self  = shift;
     my ( $p ) = shift->{'pfact'};
+
+    my ( $r );
 
     for ( $p->{'kernel'} ) {
         /AIX/ && do {
@@ -12,17 +16,13 @@ sub pfact {
                 close( F );
 
                 foreach ( @F ) {
-                    if ( /modelname\s(.*),/ ) {
-                        return $1;
-                    }
+                    if ( /modelname\s(.*),/ ) { $r = $1; last; }
                 }
             }
         };
 
         /Linux/ && do {
             if ( -e '/usr/sbin/dmidecode' ) {
-                my ( $f );
-
                 local $/;
                 $/ = /^Handle \d+x/;
 
@@ -31,17 +31,15 @@ sub pfact {
                 close( F );
 
                 # Multi-version dmidecode compat
-                if ( @F == 1 ) { @F = split /Handle/, $F[0]; }
+                if ( @F == 1 ) { @F = split( /Handle/, $F[0] ); }
 
                 foreach ( @F ) {
                     if ( /type 1,/ ) {
                         if ( /Manufacturer:\s+(.*)\s+/ ) {
-                            my $m = $1;
+                            $r = $1;
 
-                            $m =~ s/\s+/ /g;
-                            $m =~ s/\s+$//g;
-
-                            return $m;
+                            $r =~ s/\s+/ /g;
+                            $r =~ s/\s+$//g;
                         }
                     }
                 }
@@ -56,13 +54,14 @@ sub pfact {
 
                 foreach ( @F ) {
                     if ( /Hardware provider:\s+(.*)/ ) {
-                        return $1;
+                        $r = $1; last;
                     }
                 }
             }
         };
 
-        return qq((kernel not supported));
+        if ( $r ) { return( $r ); }
+        else      { return( 0 ); }
     }
 }
 

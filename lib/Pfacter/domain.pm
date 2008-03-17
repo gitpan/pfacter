@@ -1,18 +1,19 @@
 package Pfacter::domain;
 
+#
+
 sub pfact {
     my $self  = shift;
     my ( $p ) = shift->{'pfact'};
 
+    # Check for FQDN hostname first
+    if ( -e '/bin/hostname' ) {
+        return( $1 ) if qx( /bin/hostname ) =~ /\w+\.(.+?\.[a-z]{3})$/;
+    }
+
+    my ( $r );
+
     for ( $p->{'kernel'} ) {
-        my ( $d );
-
-        /AIX|FreeBSD|Linux/ && do {
-            if ( -e '/bin/hostname' ) {
-                return $1 if qx( /bin/hostname ) =~ /\w+\.(.+?\.[a-z]{3})$/;
-            }
-        };
-
         /Linux/ && do {
             if ( -e '/bin/dnsdomainname' ) {
                 open( F, '/bin/dnsdomainname |' );
@@ -20,10 +21,8 @@ sub pfact {
                 close( F );
 
                 foreach ( @F ) {
-                    $d = $1 if /^(.*\.[a-z]{3})$/;
+                    if ( /^(.*\.[a-z]{3})$/ ) { $r = $1; last; }
                 }
-
-                return $d if $d;
             }
         };
 
@@ -34,18 +33,20 @@ sub pfact {
                 close( F );
 
                 foreach ( @F ) {
-                    $d = $1 if /domain\s+(.*\.[a-z]{3})/;
+                    if ( /domain\s+(.*\.[a-z]{3})/ ) { $r = $1; last; }
                 }
-
-                return $d if $d;
             }
         };
 
-        /AIX|FreeBSD|Linux/ && do {
-            return qq((domain not set));
+        /SunOS/ && do {
+            if ( -e '/bin/domainname' ) {
+                $r = qx( /bin/domainname );
+                undef( $r ) unless $r =~ /.*\.[a-z]{3}/;
+            }
         };
 
-        return qq((kernel not supported));
+        if ( $r ) { return( $r ); }
+        else      { return( 0 ); }
     }
 }
 

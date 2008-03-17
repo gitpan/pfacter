@@ -1,12 +1,14 @@
 package Pfacter::hardwareplatform;
 
+#
+
 sub pfact {
     my $self  = shift;
     my ( $p ) = shift->{'pfact'};
 
-    for ( $p->{'kernel'} ) {
-        my ( $r );
+    my ( $r );
 
+    for ( $p->{'kernel'} ) {
         /AIX/ && do {
             if ( -e '/usr/sbin/lsattr' ) {
                 open( F, '/usr/sbin/lsattr -El proc0 |' );
@@ -14,35 +16,28 @@ sub pfact {
                 close( F );
 
                 foreach ( @F ) {
-                    if ( /type\s+.*_(\w+)\s/ ) { return $1; }
+                    if ( /type\s+.*_(\w+)\s/ ) { $r = $1; last; }
                 }
             }
         };
 
+        /Darwin/ && do {
+            if ( -e '/usr/bin/machine') { $r = qx( /usr/bin/machine ); }
+        };
+
         /Linux/ && do {
-            if ( -e '/bin/uname' ) {
-                $r = qx( /bin/uname -i );
-            }
+            if ( -e '/bin/uname' ) { $r = qx( /bin/uname -i ); }
         };
 
         /SunOS/ && do {
             if ( -e '/usr/bin/uname' ) {
-                chomp( my $r = qx( /bin/uname -i ) );
-
-                if ( $r =~ /^(.+?),.*$/ ) {
-                    return $1;
-                }
+                $r = qx( /bin/uname -i );
+                $r = $1 if /^(.+?),.*$/;
             }
         };
 
-        if ( $r ) {
-            chomp( $r );
-
-            return $r;
-        }
-        else {
-            return qq((kernel not supported));
-        }
+        if ( $r ) { return( $r ); }
+        else      { return( 0 ); }
     }
 }
 

@@ -1,5 +1,7 @@
 package Pfacter;
 
+our $VERSION = '1.12';
+
 sub modulelist {
     my $self   = shift;
     my $kernel = shift;

@@ -1,7 +1,7 @@
 package Pfacter::localtime;
 
-sub pfact {
-    return localtime();
-}
+#
+
+sub pfact { return( localtime() ); }
 
 1;

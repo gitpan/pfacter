@@ -1,28 +1,24 @@
 package Pfacter::cfversion;
 
+#
+
 sub pfact {
     my $self  = shift;
     my ( $p ) = shift->{'pfact'};
 
+    my ( $r );
+
     for ( $p->{'kernel'} ) {
         /AIX|Linux/ && do {
-            my ( $d, @i );
-
             if ( -e '/var/cfengine/bin/cfagent' ) {
-                my ( $v );
-
                 open( F, '/var/cfengine/bin/cfagent -V |' );
-                foreach ( <F> ) { $v = $1 if /GNU cfengine (\d.*)$/; }
+                foreach ( <F> ) { $r = $1 if /GNU cfengine (\d.*)$/; last; }
                 close( F );
-
-                return $v;
-            }
-            else {
-                return qq((kernel not supported));
             }
         };
 
-        return qq((kernel not supported));
+        if ( $r ) { return( $r ); }
+        else      { return( 0 ); }
     }
 }
 

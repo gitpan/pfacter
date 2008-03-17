@@ -1,31 +1,24 @@
 package Pfacter::processor;
 
+#
+
 sub pfact {
     my $self  = shift;
     my ( $p ) = shift->{'pfact'};
+
+    my ( $r );
 
     for ( $p->{'kernel'} ) {
         /AIX/ && do {
             if ( -e '/usr/sbin/lsattr' ) {
                 open( F, '/usr/sbin/lsattr -El proc0 |' );
+                my ( @F ) = <F>;
+                close( F );
+
+                foreach ( @F ) { if ( /type\s+(.+?)\s/ ) { $r = $1; last; } }
+
+                $r =~ s/\s+$//;
             }
-            else {
-                return qq((kernel not supported));
-            }
-
-            my ( @F ) = <F>;
-
-            close( F );
-
-            my ( $n ) = 0;
-
-            foreach ( @F ) {
-                if ( /type\s+(.+?)\s/ ) { $n = $1; last; }
-            }
-
-            $n =~ s/\s+$//;
-
-            return $n;
         };
 
         /Darwin/ && do {
@@ -35,23 +28,23 @@ sub pfact {
                 close( F );
 
                 foreach ( @F ) {
-                    return $1 if /Processor\stype:\s(.*)/;
+                    if ( /Processor\stype:\s(.*)/ ) { $r = $1; last; }
                 }
             }
         };
 
         /Linux/ && do {
-            my ( $c ) = 0;
+            if ( -e '/proc/cpuinfo' ) {
+                open( F, '/proc/cpuinfo' );
+                my ( @F ) = <F>;
+                close( F );
 
-            open( F, '/proc/cpuinfo' );
-            my ( @F ) = <F>;
-            close( F );
+                foreach ( @F ) {
+                    if ( /model name\s+:\s+(.+?)$/ ) { $r = $1; last; }
+                }
 
-            foreach ( @F ) { $c = $1 if /model name\s+:\s+(.+?)$/; }
-
-            $c =~ s/\s+$//;
-
-            return $c;
+                $r =~ s/\s+$//;
+            }
         };
 
         /SunOS/ && do {
@@ -61,12 +54,13 @@ sub pfact {
                 close( F );
 
                 foreach ( @F ) {
-                    return $1 if /SUNW,(.+?)\s+\d+/;
+                    if ( /SUNW,(.+?)\s+\d+/ ) { $r = $1; last; }
                 }
             }
         };
 
-        return qq((kernel not supported));
+        if ( $r ) { return( $r ); }
+        else      { return( 0 ); }
     }
 }
 

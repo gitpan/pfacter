@@ -1,8 +1,12 @@
 package Pfacter::cfclasses;
 
+#
+
 sub pfact {
     my $self  = shift;
     my ( $p ) = shift->{'pfact'};
+
+    my ( $r );
 
     for ( $p->{'kernel'} ) {
         /AIX|Linux/ && do {
@@ -21,7 +25,7 @@ sub pfact {
                     chomp();
                     my $classes = $1 if /.+?\(\s(.+?)\s\)$/i;
 
-                    foreach ( split / /, $classes ) {
+                    foreach ( split( / /, $classes ) ) {
                         next if (
                             /^entropy/
                          || /^Day[0-9]*|^Hr[0-9]*|^Min[0-9]*|^Yr[0-9]*|^Q[1-4]/
@@ -33,15 +37,13 @@ sub pfact {
                         push @classes, $_;
                     }
 
-                    return join( ' ', sort @classes );
+                    $r = join ' ', sort @classes; last;
                 }
-            }
-            else {
-                return qq((kernel not supported));
             }
         };
 
-        return qq((kernel not supported));
+        if ( $r ) { return( $r ); }
+        else      { return( 0 ); }
     }
 }
 

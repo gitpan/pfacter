@@ -1,21 +1,23 @@
 package Pfacter::hostname;
 
+#
+
 sub pfact {
+    my $self  = shift;
+    my ( $p ) = shift->{'pfact'};
+
     my ( $r );
 
-    if ( -e '/bin/hostname' ) {
-        $r = qx( /bin/hostname );
-    }
+    for ( $p->{'kernel'} ) {
+        /AIX|Darwin|FreeBSD|Linux|SunOS/ && do {
+            if ( -e '/bin/hostname' ) {
+                $r = qx( /bin/hostname );
+                $r = $1 if $r =~ /^(\w+)\..*$/;
+            }
+        };
 
-    if ( $r ) {
-        chomp( $r );
-
-        $r = $1 if $r =~ /^(\w+)\..*$/;
-
-        return $r;
-    }
-    else {
-        return qq((kernel not supported));
+        if ( $r ) { return( $r ); }
+        else      { return( 0 ); }
     }
 }
 

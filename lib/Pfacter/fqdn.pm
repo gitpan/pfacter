@@ -1,14 +1,17 @@
 package Pfacter::fqdn;
 
+#
+
 sub pfact {
     my $self  = shift;
     my ( $p ) = shift->{'pfact'};
 
-    unless ( $p->{'domain'} ) {
-        return qq((domain not set));
+    if ( $p->{'hostname'} && $p->{'domain'} ) {
+        return( $p->{'hostname'} . '.' . $p->{'domain'} );
     }
-
-    return $p->{'hostname'} . '.' . $p->{'domain'};
+    else {
+        return( 0 );
+    }
 }
 
 1;

@@ -1,14 +1,28 @@
 package Pfacter::hardwareproduct;
 
+#
+
 sub pfact {
     my $self  = shift;
     my ( $p ) = shift->{'pfact'};
 
+    my ( $r );
+
     for ( $p->{'kernel'} ) {
+        /Darwin/ && do {
+            if ( -e '/usr/sbin/system_profiler' ) {
+                open( F, '/usr/sbin/system_profiler SPHardwareDataType |' );
+                my ( @F ) = <F>;
+                close( F );
+
+                foreach ( @F ) {
+                    if ( /Machine Name\:\s+(.+?)$/ ) { $r = $1; last; }
+                }
+            }
+        };
+
         /Linux/ && do {
             if ( -e '/usr/sbin/dmidecode' ) {
-                my ( $f );
-
                 local $/;
                 $/ = /^Handle \d+x/;
 
@@ -17,17 +31,15 @@ sub pfact {
                 close( F );
 
                 # Multi-version dmidecode compat
-                if ( @F == 1 ) { @F = split /Handle/, $F[0]; }
+                if ( @F == 1 ) { @F = split( /Handle/, $F[0] ); }
 
                 foreach ( @F ) {
                     if ( /type 1,/ ) {
                         if ( /Product Name:\s+(.*)\s+/ ) {
-                            my $p = $1;
+                            $r = $1;
 
-                            $p =~ s/\s+/ /g;
-                            $p =~ s/\s+$//g;
-
-                            return $p;
+                            $r =~ s/\s+/ /g;
+                            $r =~ s/\s+$//g;
                         }
                     }
                 }
@@ -36,15 +48,13 @@ sub pfact {
 
         /SunOS/ && do {
             if ( -e '/usr/bin/uname' ) {
-                chomp( my $r = qx( /bin/uname -i ) );
-
-                if ( $r =~ /^.+?,(.*)$/ ) {
-                    return $1;
-                }
+                $r = qx( /bin/uname -i );
+                $r = $1 if /^.+?,(.*)$/;
             }
         };
 
-        return qq((kernel not supported));
+        if ( $r ) { return( $r ); }
+        else      { return( 0 ); }
     }
 }
 

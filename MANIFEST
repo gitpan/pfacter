@@ -1,7 +1,10 @@
+Changes
+MANIFEST
+META.yml
+Makefile.PL
 pfacter
-
+pfacter.pod
 lib/Pfacter.pm
-
 lib/Pfacter/architecture.pm
 lib/Pfacter/cfclasses.pm
 lib/Pfacter/cfversion.pm
@@ -29,13 +32,6 @@ lib/Pfacter/processorcount.pm
 lib/Pfacter/processor.pm
 lib/Pfacter/serialnumber.pm
 lib/Pfacter/uniqueid.pm
-lib/Pfacter/wwn.pm
-
-CHANGELOG
-Makefile.PL
-MANIFEST
-MANIFEST.SKIP
-META.yml
-pfHost.ldif
-README
+t/00-load.t
+t/pod.t
 

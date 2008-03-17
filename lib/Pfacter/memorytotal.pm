@@ -1,21 +1,21 @@
 package Pfacter::memorytotal;
 
+#
+
 sub pfact {
     my $self  = shift;
     my ( $p ) = shift->{'pfact'};
 
+    my ( $r );
+
     for ( $p->{'kernel'} ) {
         /AIX/ && do {
             if ( -e '/usr/sbin/lsattr' ) {
-                my ( $m ) = 0;
-
                 open( F, '/usr/sbin/lsattr -El sys0 |' );
                 my ( @F ) = <F>;
                 close( F );
 
-                foreach ( @F ) { $m = $1 if /realmem\s+(\d+)/; }
-
-                return $m;
+                foreach ( @F ) { if ( /realmem\s+(\d+)/ ) { $r = $1; last; } }
             }
         };
 
@@ -27,14 +27,12 @@ sub pfact {
 
                 foreach ( @F ) {
                     if ( /Primary\smemory\savailable:\s(.*)/ ) {
-                        my $m = $1;
+                        $r = $1;
 
-                        $m =~ s/\smegabytes/m/g;
-                        $m =~ s/\sgigabytes/g/g;
+                        $r =~ s/\smegabytes/m/g;
+                        $r =~ s/\sgigabytes/g/g;
 
-                        $m =~ s/\.00//g;
-
-                        return $m;
+                        $r =~ s/\.00//g;
                     }
                 }
             }
@@ -42,33 +40,44 @@ sub pfact {
 
         /FreeBSD/ && do {
             if ( -e '/sbin/dmesg' ) {
-                my ( $m ) = 0;
-
                 open( F, '/sbin/dmesg |' );
                 my ( @F ) = <F>;
                 close ( F );
 
-                foreach ( @F ) { $m = $1 if /real memory.+?(\d+)K/; }
-
-                return $m;
+                foreach ( @F ) {
+                    if ( /real memory.+?(\d+)K/ ) { $r = $1; last; }
+                }
             }
         };
 
         /Linux/ && do {
             if ( -e '/proc/meminfo' ) {
-                my ( $m ) = 0;
-
                 open( F, '/proc/meminfo' );
                 my ( @F ) = <F>;
                 close( F );
  
-                foreach ( @F ) { $m = $1 if /MemTotal:\s+(\d+)\s+\w+/; }
-
-                return $m;
+                foreach ( @F ) {
+                    if ( /MemTotal:\s+(\d+)\s+\w+/ ) { $r = $1; last; }
+                }
             }
         };
 
-        return qq((kernel not supported));
+        /SunOS/ && do {
+            if ( -e '/usr/sbin/prtconf' ) {
+                open( F, '/usr/sbin/prtconf |' );
+                my ( @F ) = <F>;
+                close( F );
+
+                foreach ( @F ) {
+                    if ( /Memory size\:\s+(\d+)\s+(Megabytes)/ ) {
+                        if ( $2 eq 'Megabytes' ) { $r = $1*1024; }
+                    }
+                }
+            }
+        };
+
+        if ( $r ) { return( $r ); }
+        else      { return( 0 ); }
     }
 }
 

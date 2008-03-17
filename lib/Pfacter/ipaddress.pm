@@ -1,56 +1,55 @@
 package Pfacter::ipaddress;
 
+#
+
 sub pfact {
     my $self  = shift;
     my ( $p ) = shift->{'pfact'};
 
+    my ( $r );
+
     for ( $p->{'kernel'} ) {
         /AIX|Darwin|FreeBSD|SunOS/ && do {
-            my ( $d, @i );
+            my ( $c );
 
-            if ( -e '/etc/ifconfig' ) {
-                open( F, '/etc/ifconfig -a |' );
+            $c = '/etc/ifconfig -a |'  if -e '/etc/ifconfig';
+            $c = '/sbin/ifconfig -a |' if -e '/sbin/ifconfig';
+
+            if ( $c ) {
+                open( F, $c );
+                my ( @F ) = <F>;
+                close( F );
+
+                my ( $d, @i );
+
+                foreach ( @F ) {
+                    $d = $1 if /^(\w+)\:/;
+                    push @i, "$d=$1" if /inet\s+(\d+\.\d+\.\d+\.\d+)/;
+                };
+
+                $r = join ' ', sort @i;
             }
-            elsif ( -e '/sbin/ifconfig' ) {
-                open( F, '/sbin/ifconfig -a |' );
-            }
-            else {
-                return qq((kernel not supported));
-            }
-
-            my ( @F ) = <F>;
-            close( F );
-
-            foreach ( @F ) {
-                $d = $1 if /^(\w+)\:/;
-                push @i, "$d=$1" if /inet\s+(\d+\.\d+\.\d+\.\d+)/;
-            };
-
-            return join ' ', sort @i;
         };
 
         /Linux/ && do {
-            my ( $d, @i );
-
             if ( -e '/sbin/ifconfig' ) {
                 open( F, '/sbin/ifconfig -a |' );
-            }
-            else {
-                return qq((kernel not supported));
-            }
+                my ( @F ) = <F>;
+                close( F );
 
-            my ( @F ) = <F>;
-            close( F );
+                my ( $d, @i );
 
-            foreach ( @F ) {
-                $d = $1 if ( /^(\w+)\s+/ || /^(\w+:\d+)\s+/ );
-                push @i, "$d=$1" if /inet addr:(\d+\.\d+\.\d+\.\d+)/;
+                foreach ( @F ) {
+                    $d = $1 if ( /^(\w+)\s+/ || /^(\w+:\d+)\s+/ );
+                    push @i, "$d=$1" if /inet addr:(\d+\.\d+\.\d+\.\d+)/;
+                }
+
+                $r = join ' ', sort @i;
             }
-
-            return join ' ', sort @i;
         };
 
-        return qq((kernel not supported));
+        if ( $r ) { return( $r ); }
+        else      { return( 0 ); }
     }
 }
 

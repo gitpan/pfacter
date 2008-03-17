@@ -1,35 +1,40 @@
 package Pfacter::operatingsystem;
 
+#
+
 sub pfact {
     my $self  = shift;
     my ( $p ) = shift->{'pfact'};
 
+    my ( $r );
+
     for ( $p->{'kernel'} ) {
         /AIX/ && do {
-            return 'AIX'
+            $r = 'AIX';
         };
 
         /Darwin/ && do {
-            return 'OSX'
+            $r = 'OSX';
         };
 
         /FreeBSD/ && do {
-            return 'FreeBSD'
+            $r = 'FreeBSD';
         };
 
         /Linux/ && do {
-            if    ( -e '/etc/debian_version' ) { return 'Debian' }
-            elsif ( -e '/etc/gentoo-release' ) { return 'Gentoo' }
-            elsif ( -e '/etc/fedora-release' ) { return 'Fedora' }
-            elsif ( -e '/etc/redhat-release' ) { return 'RedHat' }
-            elsif ( -e '/etc/SuSE-release' )   { return 'SuSE' }
+            if ( -e '/etc/debian_version' ) { $r = 'Debian'; }
+            if ( -e '/etc/gentoo-release' ) { $r = 'Gentoo'; }
+            if ( -e '/etc/fedora-release' ) { $r = 'Fedora'; }
+            if ( -e '/etc/redhat-release' ) { $r = 'RedHat'; }
+            if ( -e '/etc/SuSE-release' )   { $r = 'SuSE'; }
         };
 
         /SunOS/ && do {
-            return 'Solaris'
+            $r = 'Solaris';
         };
 
-        return qq((kernel not supported));
+        if ( $r ) { return( $r ); }
+        else      { return( 0 ); }
     }
 }
 
