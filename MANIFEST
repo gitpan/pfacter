@@ -10,6 +10,7 @@ lib/Pfacter/cfclasses.pm
 lib/Pfacter/cfversion.pm
 lib/Pfacter/disk.pm
 lib/Pfacter/domain.pm
+lib/Pfacter/filesystems.pm
 lib/Pfacter/fqdn.pm
 lib/Pfacter/hardwaremanufacturer.pm
 lib/Pfacter/hardwaremodel.pm
@@ -30,8 +31,11 @@ lib/Pfacter/memorytotal.pm
 lib/Pfacter/operatingsystem.pm
 lib/Pfacter/processorcount.pm
 lib/Pfacter/processor.pm
+lib/Pfacter/productid.pm
 lib/Pfacter/serialnumber.pm
 lib/Pfacter/uniqueid.pm
 t/00-load.t
+t/01-core.t
+t/boilerplate.t
 t/pod.t
 

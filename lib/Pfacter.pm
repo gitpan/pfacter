@@ -1,6 +1,6 @@
 package Pfacter;
 
-our $VERSION = '1.12';
+our $VERSION = '1.13';
 
 sub modulelist {
     my $self   = shift;
@@ -11,6 +11,7 @@ sub modulelist {
         architecture
         disk
         domain
+        filesystems
         fqdn
         hardwaremanufacturer
         hardwaremodel
@@ -28,7 +29,9 @@ sub modulelist {
         operatingsystem
         processor
         processorcount
+        productid
         serialnumber
+        swap
         uniqueid
 
     );

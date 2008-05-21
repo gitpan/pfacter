@@ -9,6 +9,34 @@ sub pfact {
     my ( $r );
 
     for ( $p->{'kernel'} ) {
+        /AIX/ && do {
+            if ( -e '/usr/sbin/lscfg' ) {
+                local $/;
+                $/ = /Memory DIMM/;
+
+                open( F, '/usr/sbin/lscfg -vp mem0 2>/dev/null |' );
+                my ( @F ) = <F>;
+                close( F );
+
+                my ( @i );
+
+                foreach ( @F ) {
+                    if ( /DIMM/ ) {
+                        my ( $l, $m );
+                        
+                        if ( /Size\.+(\d+)/ ) { $m = $1; }
+                        if ( /Location:\s.*-C(.*)/ ) { $l = $1 }
+
+                        $m .= 'm';
+
+                        push @i, "$l=$m";
+                    }
+                }
+
+                $r = join ' ', sort { $a <=> $b } @i;
+            }
+        };
+
         /Darwin/ && do {
             if ( -e '/usr/sbin/system_profiler') {
                 open( F, '/usr/sbin/system_profiler SPMemoryDataType |' );
