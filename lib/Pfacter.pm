@@ -1,6 +1,6 @@
 package Pfacter;
 
-our $VERSION = '1.13';
+our $VERSION = '1.14';
 
 sub modulelist {
     my $self   = shift;

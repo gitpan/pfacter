@@ -147,6 +147,7 @@ What follows is the output of Pfacter on a relatively standard Linux VM.
     architecture => x86_64
     disk => /dev/sda=10.7g /dev/sdb=8589m
     domain => company.com
+    filesystems => /dev/sda1=/boot /dev/sda2=/ /dev/sda3=/usr /dev/sda4=/var /dev/sda5=/tmp /dev/sda6=/home
     fqdn => rabbit.company.com
     hardwaremodel => x86_64
     hardwareplatform => x86_64
@@ -167,6 +168,7 @@ What follows is the output of Pfacter on a relatively standard Linux VM.
     processor => Dual Core AMD Opteron(tm) Processor 280
     processorcount => 1
     serialnumber => VMware-50 26 c5 38 09 2f 52 a3-b0 19 5c c9 f6 51 a8 6f
+    swap => 1540920
     uniqueid => 7d0ab20b
 
 Refer to the formatting options above for alternatives (XML, YAML, etc).

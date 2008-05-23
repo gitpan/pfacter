@@ -16,7 +16,7 @@ BEGIN { unshift @INC, './lib'; }
 # FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
 # details.
 
-our $VERSION = '1.13';
+our $VERSION = '1.14';
 
 
 
@@ -241,11 +241,15 @@ sub init {
         exit( 1 );
     }
 
-    # Display the (CVS) version
+    # Display the version
     if ( $self->{'var'}->{'version'} ) {
         print qq($VERSION\n);
         exit( 0 );
     }
+
+    # Display a (debug) warning to not-root users
+    $self->debug( "Executing as unpriviledged user; some facts may not work!" )
+        unless getpwnam( $< ) eq 'root';
 
     # Core modules; used to determine other things within other modules
     foreach ( qw( kernel operatingsystem hostname domain ) ) {

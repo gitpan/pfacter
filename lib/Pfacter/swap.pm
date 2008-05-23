@@ -38,6 +38,16 @@ sub pfact {
             }
         };
 
+        /Darwin|SunOS/ && do {
+            if ( -e '/usr/bin/pagesize' ) {
+                open( F, '/usr/bin/pagesize |' );
+                my ( @F ) = <F>;
+                close( F );
+
+                $r = $F[0]*1024;
+            }
+        };
+
         if ( $r ) { return( $r ); }
         else      { return( 0 ); }
     }
